@@ -6,6 +6,7 @@ var tb = {
     this.btn = document.getElementById('j-btn');
     
     this.create();
+    this.updateSettings();
     this.bindEvent();
   },
   bindEvent: function() {
@@ -19,6 +20,56 @@ var tb = {
   },
   loadData: function() {
     // return Handsontable.helper.createSpreadsheetData(6, 14);
+  },
+  updateSettings: function() {
+    var that = this;
+    this.hot.updateSettings({
+      contextMenu: {
+        callback: function (key, options) {
+          if (key === 'about') {
+            setTimeout(function () {
+              // timeout is used to make sure the menu collapsed before alert is shown
+              alert("This is a context menu with default and custom options mixed");
+            }, 100);
+          }
+        },
+        items: {
+          "row_above": {
+            name: '插入行（上）',
+            disabled: function () {
+              // if first row, disable this option
+              return that.hot.getSelected()[0] === 0;
+            }
+          },
+          "row_below": {
+            name: '插入行（下）',
+            disabled: function () {
+              // if first row, disable this option
+              return that.hot.getSelected()[0] === 0;
+            }
+          },
+          "remove_row": {
+            name: '删除行',
+            disabled: function () {
+              // if first row, disable this option
+              return that.hot.getSelected()[0] === 0
+            }
+          },
+          "add": {
+            name: '自定义菜单一',
+            disabled: function() {
+              return that.hot.getSelected()[0] === 0
+            }
+          },
+          "select": {
+            name: '自定义菜单二',
+            disabled: function() {
+              return that.hot.getSelected()[0] === 0
+            }
+          }
+        }
+      }
+    })
   },
   create: function() {
     this.hot = new Handsontable(this.container, {
